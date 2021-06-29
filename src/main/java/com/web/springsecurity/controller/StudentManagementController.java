@@ -1,6 +1,7 @@
 package com.web.springsecurity.controller;
 
 import com.web.springsecurity.model.User;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.jws.soap.SOAPBinding;
@@ -17,21 +18,25 @@ public class StudentManagementController {
     ));
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_TRAINEE')")
     public List<User> getAllUsers() {
         return allUsers;
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('student:write')")
     public void registerNewUser(@RequestBody User user) {
         System.out.println(user);
     }
 
     @DeleteMapping(path = "{userId}")
+    @PreAuthorize("hasAuthority('student:write')")
     public void deleteUser(@PathVariable Integer userId) {
         System.out.println(userId);
     }
 
     @PutMapping(path = "{userId}")
+    @PreAuthorize("hasAuthority('student:write')")
     public void updateUser(@PathVariable Integer userId,@RequestBody User user) {
         System.out.println(String.format("%s %s", userId, user.toString()));
     }
